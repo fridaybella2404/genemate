@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeneMateDNA — At-Home Paternity Test Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0d1b2a;
+  --navy-mid: #1a2e45;
+  --navy-light: #243b55;
+  --blue: #1a6eb5;
+  --blue-light: #2589d8;
+  --sky: #d6eaf8;
+  --white: #ffffff;
+  --off: #f4f7fb;
+  --mid: #5a6a7a;
+  --light: #a8b8c8;
+  --cream: #eaf0f7;
+  --gold: #c8982a;
+  --success: #1e8c5a;
+  --red: #c0392b;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Mulish', sans-serif; background: var(--white); color: var(--navy); overflow-x: hidden; font-weight: 400; }
+
+/* HEADER */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(13,27,42,0.97); backdrop-filter: blur(14px);
+  padding: 0 5vw; height: 66px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: white; text-decoration: none; letter-spacing: -0.01em; }
+.logo span { color: var(--blue-light); font-style: italic; }
+.header-contact { display: flex; align-items: center; gap: 1.5rem; }
+.header-email {
+  display: flex; align-items: center; gap: .45rem;
+  color: var(--light); font-size: .8rem; text-decoration: none; font-weight: 500;
+  transition: color .2s;
+}
+.header-email:hover { color: white; }
+.header-email svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .7; }
+.header-btn {
+  padding: .5rem 1.4rem; background: var(--blue); color: white;
+  font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  text-decoration: none; border-radius: 4px; transition: background .2s, transform .15s;
+}
+.header-btn:hover { background: var(--blue-light); transform: translateY(-1px); }
+.burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+.burger span { display: block; width: 22px; height: 1.5px; background: white; transition: transform .3s, opacity .3s; }
+.burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.mobile-nav {
+  display: none; flex-direction: column; position: fixed;
+  inset: 0; background: var(--navy); z-index: 199;
+  justify-content: center; align-items: center; gap: 2.5rem;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.mobile-nav.open { opacity: 1; pointer-events: all; }
+.mobile-nav a { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; text-decoration: none; }
+.mobile-nav a:hover { color: var(--blue-light); }
+
+/* HERO */
+#hero {
+  min-height: 100vh; padding-top: 66px;
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 55%, #0a2440 100%);
+  display: grid; grid-template-columns: 1fr 1fr;
+  position: relative; overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(26,110,181,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-content {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5rem 4vw 5rem 8vw; position: relative; z-index: 2;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgba(26,110,181,0.2); border: 1px solid rgba(26,110,181,0.4);
+  color: #7ec8f5; font-size: .68rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .35rem 1rem; border-radius: 100px; margin-bottom: 2rem;
+  width: fit-content;
+  opacity: 0; animation: fadeUp .6s .2s ease both;
+}
+.hero-badge::before {
+  content: ''; width: 7px; height: 7px; background: #7ec8f5;
+  border-radius: 50%; animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 4.5vw, 4.4rem);
+  line-height: 1.08; color: white; letter-spacing: -.01em;
+  opacity: 0; animation: fadeUp .7s .35s ease both;
+}
+h1 em { font-style: italic; color: #7ec8f5; }
+.hero-sub {
+  margin-top: 1.6rem; font-size: .98rem; line-height: 1.78;
+  color: rgba(255,255,255,.6); max-width: 46ch; font-weight: 300;
+  opacity: 0; animation: fadeUp .7s .5s ease both;
+}
+.hero-actions {
+  margin-top: 2.4rem; display: flex; gap: 1rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp .6s .65s ease both;
+}
+.btn-primary {
+  padding: .9rem 2.2rem; background: var(--blue); color: white;
+  font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  text-decoration: none; border-radius: 4px;
+  box-shadow: 0 6px 24px rgba(26,110,181,.4);
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(26,110,181,.45); }
+.btn-ghost {
+  padding: .9rem 2.2rem; border: 1.5px solid rgba(255,255,255,.3); color: rgba(255,255,255,.8);
+  font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  text-decoration: none; border-radius: 4px; transition: border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color: white; color: white; }
+.hero-stats {
+  margin-top: 3rem; display: flex; gap: 2.5rem;
+  opacity: 0; animation: fadeUp .6s .8s ease both;
+}
+.hstat { display: flex; flex-direction: column; gap: .2rem; }
+.hstat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: white; line-height: 1; }
+.hstat-label { font-size: .68rem; color: rgba(255,255,255,.45); letter-spacing: .08em; text-transform: uppercase; }
+.hero-visual {
+  display: flex; align-items: center; justify-content: center;
+  padding: 4rem 5vw; position: relative; z-index: 2;
+}
+.hero-img-wrap {
+  position: relative;
+  opacity: 0; animation: floatIn .9s .45s ease both;
+}
+@keyframes floatIn { from { opacity:0; transform: translateY(28px) scale(.96); } to { opacity:1; transform:none; } }
+.hero-img-wrap img {
+  width: 100%; 
+  /* max-width: 440px; */
+  filter: drop-shadow(0 30px 70px rgba(0,0,0,.5));
+  animation: float 6s ease-in-out infinite;
+  border-radius: 12px;
+}
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.hero-glow {
+  position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+  width: 460px; height: 460px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,110,181,.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+@keyframes fadeUp { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform:none; } }
+
+/* TRUST BAR */
+.trust-bar {
+  background: var(--blue); padding: 1.1rem 5vw;
+  display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+}
+.tb-item {
+  display: flex; align-items: center; gap: .55rem;
+  color: rgba(255,255,255,.9); font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+}
+.tb-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+/* DISCLOSURE BANNER */
+.disclosure {
+  background: var(--off); border-left: 4px solid var(--gold);
+  padding: 1rem 8vw; display: flex; align-items: flex-start; gap: .8rem;
+}
+.disclosure svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+.disclosure p { font-size: .78rem; line-height: 1.65; color: var(--mid); }
+.disclosure strong { color: var(--navy); }
+
+/* GENERIC SECTION */
+section { padding: 6rem 8vw; }
+.section-tag { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--blue); font-weight: 700; margin-bottom: .7rem; }
+.section-heading { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 3.5vw, 3rem); line-height: 1.12; letter-spacing: -.01em; }
+.section-heading em { font-style: italic; color: var(--blue); }
+.section-sub { margin-top: 1rem; max-width: 54ch; font-size: .93rem; line-height: 1.78; color: var(--mid); font-weight: 300; }
+
+/* HOW IT WORKS */
+#how { background: var(--off); }
+.steps {
+  margin-top: 4rem; display: grid; grid-template-columns: repeat(4,1fr);
+  position: relative; gap: 0;
+}
+.steps::before {
+  content: ''; position: absolute; top: 34px;
+  left: calc(12.5% + 22px); right: calc(12.5% + 22px);
+  height: 2px; background: linear-gradient(90deg, var(--blue) 0%, var(--blue-light) 100%);
+}
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1.5rem; position: relative; z-index: 1; }
+.step-n {
+  width: 68px; height: 68px; border-radius: 50%; background: var(--blue); color: white;
+  font-family: 'Playfair Display', serif; font-size: 1.6rem;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px rgba(26,110,181,.35);
+}
+.step-title { font-weight: 700; font-size: .95rem; margin-bottom: .5rem; }
+.step-desc { font-size: .82rem; line-height: 1.65; color: var(--mid); }
+
+/* KIT GALLERY */
+#gallery { background: var(--navy); padding: 5rem 5vw; }
+#gallery .section-tag { color: #7ec8f5; }
+#gallery .section-heading { color: white; }
+#gallery .section-sub { color: rgba(255,255,255,.5); }
+.gallery-grid {
+  margin-top: 3rem; display: grid;
+  grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto;
+  gap: 12px;
+}
+.gallery-cell { overflow: hidden; border-radius: 10px; background: var(--navy-mid); position: relative; }
+.gallery-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.gallery-cell:hover img { transform: scale(1.04); }
+.gallery-cell.big { grid-row: 1/3; }
+.gallery-cell.big img { height: 100%; }
+.gallery-cell:not(.big) img { height: 100%; }
+.gallery-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(0deg, rgba(13,27,42,.85) 0%, transparent 100%);
+  padding: 1.2rem 1rem .8rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.75);
+}
+
+/* WHAT'S INCLUDED */
+#kit { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; align-items: center; padding: 6rem 8vw; }
+.kit-img img { width: 100%; border-radius: 12px; box-shadow: 0 20px 60px rgba(13,27,42,.12); }
+.kit-list { margin-top: 2.5rem; display: flex; flex-direction: column; gap: .9rem; }
+.kit-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1rem 1.2rem; background: var(--off);
+  border-radius: 8px; border: 1px solid var(--cream);
+  transition: border-color .2s, transform .2s;
+}
+.kit-item:hover { border-color: var(--blue); transform: translateX(4px); }
+.kit-icon {
+  width: 38px; height: 38px; background: var(--sky); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem;
+}
+.kit-item-text strong { display: block; font-size: .88rem; font-weight: 700; margin-bottom: .18rem; }
+.kit-item-text span { font-size: .78rem; color: var(--mid); line-height: 1.5; }
+
+/* ACCURACY */
+#accuracy { background: var(--off); }
+.accuracy-grid { margin-top: 3.5rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.acc-card {
+  background: white; border: 1px solid var(--cream); border-radius: 12px;
+  padding: 2rem; text-align: center; transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+.acc-card:hover { border-color: var(--blue); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(26,110,181,.1); }
+.acc-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--blue); line-height: 1; margin-bottom: .4rem; }
+.acc-label { font-size: .82rem; color: var(--mid); line-height: 1.55; }
+
+/* ORDER FORM */
+#order { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 6rem 8vw; }
+#order .section-tag { color: #7ec8f5; }
+#order .section-heading { color: white; }
+#order .section-sub { color: rgba(255,255,255,.55); }
+.order-layout { margin-top: 3.5rem; display: grid; grid-template-columns: 1fr 1.4fr; gap: 5vw; align-items: start; }
+.order-info { color: white; }
+.order-price-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+}
+.order-price-card.highlighted { background: rgba(26,110,181,.2); border-color: rgba(26,110,181,.5); }
+.opc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.opc-name { font-weight: 700; font-size: 1rem; }
+.opc-price { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; line-height: 1; }
+.opc-price span { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,.5); }
+.opc-badge {
+  background: var(--gold); color: white; font-size: .6rem; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase; padding: .2rem .7rem; border-radius: 100px;
+}
+.opc-features { list-style: none; display: flex; flex-direction: column; gap: .6rem; margin-top: 1rem; }
+.opc-features li { font-size: .8rem; color: rgba(255,255,255,.65); display: flex; align-items: center; gap: .6rem; }
+.opc-features li::before {
+  content: '✓'; width: 16px; height: 16px; background: rgba(26,110,181,.4);
+  color: #7ec8f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 900; flex-shrink: 0;
+}
+.guarantee-note {
+  display: flex; align-items: flex-start; gap: .7rem;
+  font-size: .78rem; color: rgba(255,255,255,.5); line-height: 1.6; margin-top: 1.5rem;
+}
+.guarantee-note svg { width: 16px; height: 16px; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+
+/* THE FORM */
+.order-form {
+  background: white; border-radius: 16px; padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+.form-heading { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: .3rem; }
+.form-sub { font-size: .82rem; color: var(--mid); margin-bottom: 2rem; line-height: 1.55; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.form-field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; }
+.form-field label { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); }
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: .75rem .9rem; border: 1.5px solid var(--cream);
+  border-radius: 6px; font-family: 'Mulish', sans-serif;
+  font-size: .88rem; color: var(--navy); background: var(--off);
+  outline: none; transition: border-color .2s, background .2s;
+  width: 100%;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--blue); background: white; }
+.form-field textarea { resize: vertical; min-height: 90px; }
+.form-privacy {
+  display: flex; align-items: flex-start; gap: .6rem;
+  font-size: .75rem; color: var(--mid); line-height: 1.5; margin-bottom: 1.5rem;
+}
+.form-privacy input { width: auto; margin: 0; flex-shrink: 0; margin-top: 2px; }
+.btn-submit {
+  width: 100%; padding: 1rem; background: var(--navy); color: white;
+  font-family: 'Mulish', sans-serif; font-size: .85rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  border: none; border-radius: 6px; cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 18px rgba(13,27,42,.25);
+}
+.btn-submit:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,110,181,.35); }
+.form-success {
+  display: none; text-align: center; padding: 2rem 1rem;
+}
+.form-success .check {
+  width: 60px; height: 60px; background: var(--success);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; margin: 0 auto 1.2rem;
+}
+.form-success h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: .5rem; }
+.form-success p { font-size: .85rem; color: var(--mid); line-height: 1.65; }
+
+/* REVIEWS */
+#reviews { background: var(--off); }
+.reviews-grid { margin-top: 3rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.review-card {
+  background: white; border: 1px solid var(--cream); border-radius: 12px; padding: 1.8rem;
+  transition: border-color .2s, transform .2s;
+}
+.review-card:hover { border-color: var(--blue); transform: translateY(-3px); }
+.review-stars { color: var(--gold); font-size: .9rem; margin-bottom: 1rem; letter-spacing: .04em; }
+.review-text { font-size: .87rem; line-height: 1.75; color: var(--mid); font-style: italic; margin-bottom: 1.2rem; }
+.review-author { font-size: .75rem; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: .5rem; }
+.review-dot {
+  width: 8px; height: 8px; background: var(--blue); border-radius: 50; flex-shrink: 0;
+  border-radius: 50%;
+}
+.verified { font-size: .65rem; color: var(--success); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-left: .3rem; }
+
+/* FAQ */
+#faq { max-width: 820px; margin: 0 auto; padding: 6rem 4vw; }
+.faq-item { border-bottom: 1px solid var(--cream); }
+.faq-btn {
+  width: 100%; background: none; border: none; padding: 1.3rem 0;
+  text-align: left; font-family: 'Mulish', sans-serif; font-size: .93rem;
+  font-weight: 600; color: var(--navy); cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+}
+.faq-arrow {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--sky);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue); font-size: .7rem; flex-shrink: 0;
+  transition: transform .25s, background .2s;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); background: var(--blue); color: white; }
+.faq-body { display: none; padding: 0 0 1.3rem; font-size: .87rem; line-height: 1.8; color: var(--mid); }
+.faq-item.open .faq-body { display: block; }
+
+/* FOOTER */
+footer {
+  background: var(--navy); color: rgba(255,255,255,.35); padding: 2.5rem 5vw;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06);
+}
+.footer-logo { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: white; text-decoration: none; }
+.footer-logo span { color: var(--blue-light); font-style: italic; }
+footer p { font-size: .72rem; }
+footer nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+footer nav a { font-size: .7rem; color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
+footer nav a:hover { color: rgba(255,255,255,.7); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* MOBILE */
+@media (max-width: 960px) {
+  #hero { grid-template-columns: 1fr; }
+  .hero-content { padding: 4rem 6vw; order: 2; }
+  .hero-visual { order: 1; padding: 3rem 6vw 0; }
+  .hero-img-wrap img { max-width: 260px; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .steps::before { display: none; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-cell.big { grid-row: auto; }
+  .gallery-cell.big img { height: 100%; }
+  #kit { grid-template-columns: 1fr; }
+  .accuracy-grid { grid-template-columns: 1fr 1fr; }
+  .order-layout { grid-template-columns: 1fr; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .header-email { display: none; }
+  .burger { display: flex; }
+  .mobile-nav { display: flex; }
+}
+@media (max-width: 520px) {
+  section { padding: 4rem 6vw; }
+  #kit, #order { padding: 4rem 6vw; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; }
+  .accuracy-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="logo">GeneMate<span>DNA</span></a>
+  <a href="mailto:contact@genematedata.co" class="header-email">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+    contact@genematedata.co
+  </a>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <a href="#order" class="header-btn">Buy Now</a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#how">How It Works</a>
+  <a href="#kit">The Kit</a>
+  <a href="#accuracy">Accuracy</a>
+  <a href="#order">Order</a>
+  <a href="#order">Contact</a>
+  <!-- <a href="#order">contact@genematedata.co</a> -->
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✦ 99.99% Accurate · Lab-Certified Results</div>
+    <h1>The GeneMate You<br>Deserve, <em>At Home.</em></h1>
+    <p class="hero-sub">GeneMateDNA delivers court-admissible-grade paternity testing with clinical precision — privately, discreetly, and without ever leaving your home.</p>
+    <div class="hero-actions">
+      <a href="#order" class="btn-primary">Order Your Kit →</a>
+      <a href="#how" class="btn-ghost">See How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><span class="hstat-num">99.99%</span><span class="hstat-label">Accuracy</span></div>
+      <div class="hstat"><span class="hstat-num">10 min</span><span class="hstat-label">To Results</span></div>
+      <div class="hstat"><span class="hstat-num">100%</span><span class="hstat-label">Discreet</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-img-wrap">
+      <div class="hero-glow"></div>
+      <img src="00change.jpeg" alt="Cnatel Logo">
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>HIPAA Compliant</div>
+  <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Results in 10 Minutes</div>
+  <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>100% Private</div>
+  <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>30-Day Guarantee</div>
+  <div class="tb-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Free Discreet Shipping</div>
+</div>
+
+<!-- DISCLOSURE -->
+<div class="disclosure reveal">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <p><strong>Important Notice:</strong> GeneMateDNA provides personal-knowledge testing for private informational purposes. For results to be used in legal proceedings (court, child support, custody), a legally-admissible test with chain-of-custody documentation is required. Please <a href="mailto:contact@genematedata.co" style="color:var(--blue);">contact us</a> to discuss legal-grade options.</p>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-tag reveal">Simple Process</p>
+  <h2 class="section-heading reveal">Answers in <em>4 steps.</em></h2>
+  <p class="section-sub reveal">No clinic. No awkward conversations. No waiting weeks. Just clear, accurate results in minutes.</p>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-n">1</div>
+      <div class="step-title">Order Discreetly</div>
+      <p class="step-desc">Ships in unmarked packaging. No company name on the box. Arrives in 2–7 business days.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-n">2</div>
+      <div class="step-title">Collect Samples</div>
+      <p class="step-desc">Insert the sterile sample into the GeneMateDNA tubes device. Takes under 10 minutes for result.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-n">3</div>
+      <div class="step-title">Device Analyzes</div>
+      <p class="step-desc">The analyzer processes your samples with clinical-grade precision. Watch the display count down live.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-n">4</div>
+      <div class="step-title">Get Your Answer</div>
+      <p class="step-desc">Results sync instantly to your private app. Clear, plain-language results — no medical degree needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- KIT GALLERY -->
+<section id="gallery" style="padding:5rem 5vw;">
+  <p class="section-tag reveal">The Kit</p>
+  <h2 class="section-heading reveal" style="color:white;">Precision-engineered.<br><em>Ready to use.</em></h2>
+  <div class="gallery-grid reveal">
+    <div class="gallery-cell big">
+     <img src="dna_doc.png" alt="Genemate Logo">
+      <div class="gallery-label">James Bernard</div>
+    </div>
+    <div class="gallery-cell">
+                  <img src="chnage-cap.png" alt="Genemate Logo">
+      <div class="gallery-label">Sealed Cap</div>
+    </div>
+    <div class="gallery-cell">
+        <img src="change-full.png" alt="Genemate Logo">
+      <div class="gallery-label">Device — Closed</div>
+    </div>
+    <div class="gallery-cell">
+           <img src="change992.jpeg" alt="Genemate Logo">
+      <div class="gallery-label">Live 99% Reading</div>
+    </div>
+    <div class="gallery-cell">
+           <img src="change00.jpeg" alt="Genemate Logo">
+      <div class="gallery-label">USB-C Charging</div>
+    </div>
+  </div>
+</section>
+
+<!-- KIT CONTENTS -->
+<section id="kit">
+  <div class="kit-img reveal">
+               <img src="00change.jpeg" alt="Genemate Logo">
+  </div>
+  <div class="kit-text">
+    <p class="section-tag reveal">What's Inside</p>
+    <h2 class="section-heading reveal">Everything included.<br><em>Nothing missing.</em></h2>
+    <div class="kit-list">
+      <div class="kit-item reveal">
+        <div class="kit-icon">🧬</div>
+        <div class="kit-item-text">
+          <strong>GeneMateDNA Analyzer Device</strong>
+          <span>Rechargeable via USB-C. Dual sample slot. LED display showing live battery & progress. Bluetooth to iOS/Android.</span>
+        </div>
+      </div>
+      <div class="kit-item reveal">
+        <div class="kit-icon">🧪</div>
+        <div class="kit-item-text">
+          <strong>2 Sterile Sample Collection Tubes</strong>
+          <span>Pre-labeled, single-use vials designed for easy, hygienic buccal swab or fluid collection.</span>
+        </div>
+      </div>
+      <div class="kit-item reveal">
+        <div class="kit-icon">🔒</div>
+        <div class="kit-item-text">
+          <strong>Tamper-Proof Sealed Cap</strong>
+          <span>Airtight protective lid keeps the device clean and samples secure between uses.</span>
+        </div>
+      </div>
+      <div class="kit-item reveal">
+        <div class="kit-icon">🔌</div>
+        <div class="kit-item-text">
+          <strong>USB-C Charging Cable</strong>
+          <span>One charge powers 200+ tests. Device ships at 99% battery — ready immediately out of the box.</span>
+        </div>
+      </div>
+      <div class="kit-item reveal">
+        <div class="kit-icon">📱</div>
+        <div class="kit-item-text">
+          <strong>GeneMateDNA App (Free)</strong>
+          <span>Private, encrypted results on iOS and Android. Results stored locally — never shared or sold.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCURACY -->
+<section id="accuracy">
+  <p class="section-tag reveal">Why Trust Us</p>
+  <h2 class="section-heading reveal">Clinical accuracy.<br><em>Home convenience.</em></h2>
+  <p class="section-sub reveal">GeneMateDNA uses the same immunoassay and DNA marker technology found in certified reference laboratories.</p>
+  <div class="accuracy-grid">
+    <div class="acc-card reveal">
+      <div class="acc-num">99.99%</div>
+      <div class="acc-label">Paternity inclusion accuracy — the gold standard in DNA relationship testing</div>
+    </div>
+    <div class="acc-card reveal">
+      <div class="acc-num">10 min</div>
+      <div class="acc-label">Average time from sample insertion to final result display on device</div>
+    </div>
+    <div class="acc-card reveal">
+      <div class="acc-num">16+</div>
+      <div class="acc-label">STR genetic markers analyzed per test — exceeding AABB minimum requirements</div>
+    </div>
+    <div class="acc-card reveal">
+      <div class="acc-num">200+</div>
+      <div class="acc-label">Tests per single device charge via USB-C rechargeable battery</div>
+    </div>
+    <div class="acc-card reveal">
+      <div class="acc-num">0%</div>
+      <div class="acc-label">Data sharing — your results never leave your phone unless you choose to share them</div>
+    </div>
+    <div class="acc-card reveal">
+      <div class="acc-num">30</div>
+      <div class="acc-label">Day money-back guarantee on all unopened kits, no questions asked</div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER FORM -->
+<section id="order">
+  <p class="section-tag reveal">Order Today</p>
+  <h2 class="section-heading reveal">Get your kit.<br><em>Get your answers.</em></h2>
+  <p class="section-sub reveal">Fill out the form below and our team will confirm your order and payment details within one business day.</p>
+  <div class="order-layout">
+    <div class="order-info reveal">
+      
+      <!-- <div class="order-price-card">
+        <div class="opc-header">
+          <div>
+            <div class="opc-name">Essential Kit</div>
+            <div class="opc-price">$79 <span>one-time</span></div>
+          </div>
+        </div>
+        <ul class="opc-features">
+          <li>GeneMateDNA Analyzer Device</li>
+          <li>2 Sterile Sample Tubes</li>
+          <li>App Access (1 year)</li>
+          <li>Email Support</li>
+          <li>Discreet Shipping</li>
+        </ul>
+      </div> -->
+      <div class="order-price-card highlighted">
+        <!-- <div class="opc-header">
+          <div>
+            <div class="opc-name">Complete Kit</div>
+            <div id="slash-price" class="opc-price">$599</div>
+            <div class="opc-price">$149 <span>one-time</span></div>
+          </div>
+        </div> -->
+        <div class="opc-header">
+          <div>
+            <div class="opc-name">Complete Kit</div>
+            <div id="slash-price" class="opc-price" style="text-decoration: line-through; opacity: 0.45; font-size: 1.2rem;">$599</div>
+            <div class="opc-price">$149 <span>one-time</span></div>
+          </div>
+          <!-- <span class="opc-badge">Most Popular</span> -->
+        </div>
+        <ul class="opc-features">
+          <li>GeneMateDNA Analyzer Device</li>
+          <li>4 Sterile Sample Tubes</li>
+          <li>App Access (Lifetime)</li>
+          <li>Priority Support</li>
+          <li>3-Month Free Refills</li>
+          <li>Discreet Shipping</li>
+        </ul>
+      </div>
+      <div class="guarantee-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        All orders are processed over secure, encrypted email. We never store payment information. Your privacy is our top priority.
+      </div>
+    </div>
+
+    <div class="reveal">
+  <div class="order-form" id="orderForm">
+  
+    <div class="form-heading">Contact Us Or Buy Now</div>
+    <p class="form-sub">Complete this form and we'll respond within 24 hours with your order confirmation and secure payment wallet address.</p>
+    <form target="_blank" action="https://formsubmit.co/contact@genematedata.com" method="POST">
+
+      <!-- FormSubmit config (hidden) -->
+      <input type="hidden" name="_subject" value="New TruthDNA Kit Order Request">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div class="form-field">
+        <label for="lname">Name *</label>
+        <input type="text" id="lname" name="name" placeholder="Anonymous" required>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email Address *</label>
+        <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+      </div>
+
+      <div class="form-field">
+        <label for="address">Shipping Address *</label>
+        <input type="text" id="address" name="address" placeholder="123 Main St, City, State, ZIP" required>
+      </div>
+
+      <div class="form-field">
+        <label for="message">Questions or Special Instructions</label>
+        <textarea id="message" name="message" placeholder="Any questions about the kit, or shipping..."></textarea>
+      </div>
+
+      <div class="form-privacy">
+        <input type="checkbox" id="privacy" required>
+        <label for="privacy">I understand this kit is for personal informational purposes. I confirm I am 18 years or older and agree to the Privacy Policy and Terms of Use.</label>
+      </div>
+
+      <button type="submit" class="btn-submit">Send My Order Request →</button>
+      <p>Our email: contact@genematedata.com</p>
+      <!-- <p> <a href="mailto:contact@genematedata.co" class="header-email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        contact@genematedata.co
+      </a>
+      </p> -->
+      
+
+    </form>
+  </div>
+ 
+  <div class="form-success" id="formSuccess">
+    <div class="check">✓</div>
+    <h3>Request Received!</h3>
+    <p>Thank you. Our team will email you at the address provided within one business day with your order confirmation and secure payment link.<br><br>All correspondence comes from <strong>contact@genematedata.com</strong></p>
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <p class="section-tag reveal">Verified Reviews</p>
+  <h2 class="section-heading reveal">Real people.<br><em>Real answers.</em></h2>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"I needed to know and I needed to know privately. GeneMateDNA gave me a clear answer in minutes. No clinic. No judgment. Just the GeneMate I'd been afraid to face for two years."</p>
+      <div class="review-author"><div class="review-dot"></div>Anonymous. <span class="verified">✓ Verified</span></div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The kit arrived in a plain box with zero indication of what was inside. Setup took five minutes. The device is incredibly intuitive and the results were crystal clear on my phone."</p>
+      <div class="review-author"><div class="review-dot"></div>Anonymous. <span class="verified">✓ Verified</span></div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"I was skeptical about home DNA accuracy but cross-referenced this with a lab test afterward. The results matched exactly. The 99.99% claim is real. Completely worth it."</p>
+      <div class="review-author"><div class="review-dot"></div>Anonymous <span class="verified">✓ Verified</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <p class="section-tag reveal">Questions</p>
+  <h2 class="section-heading reveal">We have <em>answers.</em></h2>
+  <br>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">Is the GeneMateDNA test really 99.99% accurate? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">Yes. GeneMateDNA analyzes 16+ STR genetic markers — the same methodology used by AABB-accredited labs. Our accuracy rate of 99.99% for paternity inclusion and 100% for exclusion meets clinical reference standards.</div>
+  </div>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">Can I use these results in court? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">Our standard kit is for personal informational purposes only and is not court-admissible. For legal proceedings, we offer a court-admissible option with chain-of-custody documentation. Contact us at contact@genematedata.co to discuss legal-grade testing.</div>
+  </div>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">Is my privacy completely protected? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">Completely. All results are stored locally and encrypted on your personal device. We never store, access, or sell your health or genetic data. Your identity and results remain 100% private.</div>
+  </div>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">How does the ordering process work? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">Submit the order form above. Our team responds within 24 hours with a secure payment wallet <address></address> Once payment is confirmed, your kit ships within 1 to 7 business day in discreet, unmarked packaging.</div>
+  </div>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">What is the refund policy? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">We offer a full 30-day money-back guarantee if any issues with kits. If you're unsatisfied for any reason, email contact@genematedata.co and we'll process a full refund, no questions asked.</div>
+  </div>
+  <div class="faq-item reveal">
+    <button class="faq-btn" onclick="toggleFaq(this)">Do I need the other person's consent? <span class="faq-arrow">▾</span></button>
+    <div class="faq-body">For personal-knowledge testing with our standard kit, requirements vary by jurisdiction. For court-admissible testing, consent and chain-of-custody procedures are required. We recommend consulting a legal professional if you have questions about your specific situation.</div>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="footer-logo">GeneMate<span>DNA</span></a>
+  <p>© 2026 GeneMateDNA Health Technologies. All rights reserved. For informational purposes only.</p>
+  <nav>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Use</a>
+    <a href="#">Legal Testing</a>
+    <a href="mailto:contact@genematedata.co">Contact</a>
+  </nav>
+</footer>
+
+<script>
+// Burger menu
+const burger = document.getElementById('burger');
+const nav = document.getElementById('mobileNav');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+  document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+});
+document.querySelectorAll('#mobileNav a').forEach(a => {
+  a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    nav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+      const idx = siblings.indexOf(e.target);
+      e.target.style.transitionDelay = Math.min(idx * 0.08, 0.4) + 's';
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// FAQ
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Form submit
+function submitForm(e) {
+  e.preventDefault();
+  const fname = document.getElementById('fname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const kit = document.getElementById('kit_select').value;
+  const privacy = document.getElementById('privacy').checked;
+  if (!fname || !email || !address || !kit || !privacy) {
+    alert('Please fill in all required fields and accept the privacy terms.');
+    return;
+  }
+  document.getElementById('orderForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>
